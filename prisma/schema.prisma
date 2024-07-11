@@ -19,7 +19,8 @@ model User {
   email String
   isAdmin Boolean
   preferences Json
-  posts Post[]
+  writtenPosts Post[] @relation("WrittenPosts")
+  favoritePosts Post[] @relation("FavoritePosts")
 }
 
 model Post {
@@ -27,6 +28,14 @@ model Post {
   rating Float
   createdAt DateTime
   updatedAt DateTime
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation("WrittenPosts",fields: [authorId], references: [id])
   authorId String
+  favoritedBy User? @relation("FavoritePosts",fields: [favoritedById], references: [id])
+  favoritedById String?
+  categories Category[]
+}
+
+model Category {
+  id String @id @default(uuid())
+  posts Post[]
 }
